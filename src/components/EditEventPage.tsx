@@ -34,7 +34,7 @@ const EditEventPage = () => {
         }
     }, [id]);
 
-    // Manejar cambios en los inputs del formulario
+    
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
