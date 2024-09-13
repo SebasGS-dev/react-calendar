@@ -1,10 +1,10 @@
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom"
 import MainApp from "../components/mainApp"
-// import EditEventPage from "../components/EditEventPage"
-import EditEventPageCopy from "../components/EditEventPageCopy"
+import EditEventPage from "../components/EditEventPage"
 
 
 const Navigation = () => {
+    
     return (
         <Router>
             <Routes>
@@ -16,7 +16,7 @@ const Navigation = () => {
                 {/* Ruta para la página de edición */}
                 <Route
                     path="/edit/:id"
-                    element={<EditEventPageCopy/>}
+                    element={<EditEventPage/>}
                 />
 
                 <Route path="*" element={<Navigate to="/" replace />} />

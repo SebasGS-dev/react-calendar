@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 // Colores basados en la prioridad
@@ -37,7 +36,7 @@ const generateDaysOfMonth = () => {
     return daysArray;
 };
 
-const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent, updateEventDate }) => {
+const Calendar = ({ events, deleteEvent, updateEventDate }: CalendarProps) => {
     const daysOfSeptember = generateDaysOfMonth();
 
     // Función para obtener eventos en un día específico
@@ -47,7 +46,7 @@ const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent, updateEventDat
     };
 
     return (
-        <div className="max-w-md mx-auto p-4">
+        <div className="max-w-screen-xl p-4">
             <h2 className="text-xl font-bold mb-4 text-center">Calendario - Septiembre 2024</h2>
 
             <div className="grid grid-cols-7 gap-2">
@@ -81,10 +80,10 @@ const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent, updateEventDat
 
                                 {/* Campo para editar la fecha del evento */}
                                 <input
-                                type="date"
-                                value={event.eventDate}
-                                onChange={(e) => updateEventDate(event, e.target.value)}
-                                className="mt-2 w-full bg-gray-200 p-2 rounded-md"
+                                    type="date"
+                                    value={event.eventDate}
+                                    onChange={(e) => updateEventDate(event, e.target.value)}
+                                    className="mt-2 w-full bg-gray-200 p-2 rounded-md"
                                 />
 
                                 {/* Botones de editar y borrar */}

@@ -15,7 +15,11 @@ interface Event {
 const MainApp = () => {
     // Estado para manejar los eventos
     const [events, setEvents] = useState<Event[]>([]);
-    const [ id, setId ] = useState(0);
+    const [id, setId] = useState<number>(() => {
+        // Inicializa el ID desde el localStorage o desde 0 si no existe
+        const storedId = localStorage.getItem("lastId");
+        return storedId ? parseInt(storedId, 10) : 0;
+    });
 
     // Cargar eventos del localStorage cuando la aplicación se monta
     useEffect(() => {
@@ -25,8 +29,10 @@ const MainApp = () => {
 
     // Función para agregar un nuevo evento
     const addEvent = (newEvent: Event) => {
-        setId(prev => prev + 1)
-        newEvent.id = id;
+        const newId = id + 1;
+        setId(newId);
+        localStorage.setItem("lastId", newId.toString());
+        newEvent.id = newId;
         const updatedEvents = [...events, newEvent];
         setEvents(updatedEvents);
         localStorage.setItem("events", JSON.stringify(updatedEvents));
@@ -48,32 +54,26 @@ const MainApp = () => {
         localStorage.setItem("events", JSON.stringify(updatedEvents));
     };
 
-    // Función para actualizar un evento completo (usada en la página de edición)
-    const updateEvent = (updatedEvent: Event) => {
-        const updatedEvents = events.map((event) =>
-        event.eventName === updatedEvent.eventName ? updatedEvent : event
-        );
-        setEvents(updatedEvents);
-        localStorage.setItem("events", JSON.stringify(updatedEvents));
-    };
-
     return (
         <div className="App p-11">
             <h1 className="text-3xl font-bold text-center mb-10">
                 Gestión de Eventos
             </h1>
-        <div className="flex flex-row gap-4 w-full">
-            <div className="w-full">
-                <EventForm addEvent={addEvent} />
+            <div className="flex flex-row gap-4 w-full">
+                {/* Columna izquierda (Formulario) */}
+                <div className="w-1/3">
+                    <EventForm addEvent={addEvent} />
+                </div>
+
+                {/* Columna derecha (Calendario) */}
+                <div className="w-2/3">
+                    <Calendar
+                        events={events}
+                        deleteEvent={deleteEvent}
+                        updateEventDate={updateEventDate}
+                    />
+                </div>
             </div>
-            <div className="w-full">
-                <Calendar
-                    events={events}
-                    deleteEvent={deleteEvent}
-                    updateEventDate={updateEventDate}
-                />
-            </div>
-        </div>
         </div>
     );
 };
