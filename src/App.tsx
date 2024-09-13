@@ -35,6 +35,15 @@ const App: React.FC = () => {
     localStorage.setItem("events", JSON.stringify(updatedEvents));
   };
 
+  // Función para actualizar la fecha de un evento
+  const updateEventDate = (updatedEvent: Event, newDate: string) => {
+    const updatedEvents = events.map((event) => 
+      event === updatedEvent ? { ...event, eventDate: newDate } : event
+    );
+    setEvents(updatedEvents);
+    localStorage.setItem("events", JSON.stringify(updatedEvents));
+  };
+
   return (
     <div className="App p-11">
       <h1 className="text-3xl font-bold text-center mb-10">Gestión de Eventos</h1>
@@ -43,7 +52,7 @@ const App: React.FC = () => {
             <EventForm addEvent={addEvent} />
           </div>
           <div className="w-full">
-            <Calendar events={events} deleteEvent={deleteEvent} />
+            <Calendar events={events} deleteEvent={deleteEvent} updateEventDate={updateEventDate}/>
           </div>
       </div>
     </div>

@@ -20,6 +20,7 @@ interface Event {
 interface CalendarProps {
     events: Event[];
     deleteEvent: (event: Event) => void;
+    updateEventDate: (event: Event, newDate: string) => void;
 }
 
 // Generar los días de septiembre de 2024
@@ -34,12 +35,13 @@ const generateDaysOfMonth = () => {
     return daysArray;
 };
 
-const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent }) => {
+const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent, updateEventDate }) => {
     const daysOfSeptember = generateDaysOfMonth();
 
     // Función para obtener eventos en un día específico
     const getEventsForDay = (date: Date) => {
-        return events.filter((event) => new Date(event.eventDate).toDateString() === date.toDateString());
+        const formattedDate = date.toISOString().split('T')[0];
+        return events.filter((event) => event.eventDate === formattedDate);
     };
 
     return (
@@ -48,13 +50,13 @@ const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent }) => {
 
             <div className="grid grid-cols-7 gap-2">
                 {/* Cabecera del calendario */}
-                <div className="font-bold">Dom</div>
                 <div className="font-bold">Lun</div>
                 <div className="font-bold">Mar</div>
                 <div className="font-bold">Mié</div>
                 <div className="font-bold">Jue</div>
                 <div className="font-bold">Vie</div>
                 <div className="font-bold">Sáb</div>
+                <div className="font-bold">Dom</div>
 
                 {/* Días en blanco para que el 1 de septiembre inicie en el día correcto */}
                 <div></div>
@@ -74,6 +76,14 @@ const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent }) => {
                             <div key={eventIndex} className={`mt-2 p-2 text-white rounded-md ${priorityColors[event.priority]}`}>
                                 <p className="font-bold">{event.eventName}</p>
                                 <p className="text-sm">{event.user}</p>
+
+                                {/* Campo para editar la fecha del evento */}
+                                <input
+                                type="date"
+                                value={event.eventDate}
+                                onChange={(e) => updateEventDate(event, e.target.value)}
+                                className="mt-2 w-full bg-gray-200 p-2 rounded-md"
+                                />
 
                                 {/* Botones de editar y borrar */}
                                 <div className="mt-2 flex justify-between">
