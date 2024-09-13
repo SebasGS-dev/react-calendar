@@ -9,17 +9,17 @@ type EventFormInputs = {
     priority: string;
 };
 
-const EventForm: React.FC = () => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm <EventFormInputs> ();
+interface EventFormProps {
+    addEvent: (newEvent: EventFormInputs) => void;
+}
+
+const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<EventFormInputs>();
 
     const onSubmit = (data: EventFormInputs) => {
-        // Guardar el evento en el almacenamiento local
-        const events = JSON.parse( localStorage.getItem("events") || "[]" );
-
-        localStorage.setItem("events", JSON.stringify([...events, data]));
-
-        alert("Evento guardado correctamente");
-        reset(); // Limpiar el formulario después de guardar
+        // Llamar a la función addEvent para agregar el nuevo evento
+        addEvent(data);
+        reset(); // Limpiar el formulario después de agregar el evento
     };
 
     return (
