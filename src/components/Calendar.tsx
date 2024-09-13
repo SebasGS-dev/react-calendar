@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // Colores basados en la prioridad
 const priorityColors: Record <string, string> = {
@@ -15,6 +16,7 @@ interface Event {
     eventDetails: string;
     user: string;
     priority: string;
+    id: number;
 }
 
 interface CalendarProps {
@@ -87,7 +89,9 @@ const Calendar: React.FC<CalendarProps> = ({ events, deleteEvent, updateEventDat
 
                                 {/* Botones de editar y borrar */}
                                 <div className="mt-2 flex justify-between">
-                                    <button className="bg-yellow-400 text-black px-2 py-1 rounded">Editar</button>
+                                <Link to={`/edit/${event.id}`} className="bg-yellow-400 text-black px-2 py-1 rounded">
+                                    Editar
+                                </Link>
                                     <button className="bg-red-600 px-2 py-1 rounded" onClick={() => deleteEvent(event)}>Borrar</button>
                                 </div>
                             </div>

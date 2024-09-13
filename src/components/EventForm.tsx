@@ -7,6 +7,7 @@ type EventFormInputs = {
     eventDetails: string;
     user: string;
     priority: string;
+    id: number;
 };
 
 interface EventFormProps {
