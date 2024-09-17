@@ -15,34 +15,21 @@ interface Event {
 const MainApp = () => {
     // Estado para manejar los eventos
     const [events, setEvents] = useState<Event[]>([]);
-    const [id, setId] = useState<number>(() => {
-        // Inicializa el ID desde el localStorage o desde 0 si no existe
-        const storedId = localStorage.getItem("lastId");
-        return storedId ? parseInt(storedId, 10) : 0;
-    });
-
-    // Cargar eventos del localStorage cuando la aplicación se monta
-    useEffect(() => {
-        const storedEvents = JSON.parse(localStorage.getItem("events") || "[]");
-        setEvents(storedEvents);
-    }, []);
+    const [id, setId] = useState<number>(0)
 
     // Función para agregar un nuevo evento
     const addEvent = (newEvent: Event) => {
         const newId = id + 1;
         setId(newId);
-        localStorage.setItem("lastId", newId.toString());
         newEvent.id = newId;
         const updatedEvents = [...events, newEvent];
         setEvents(updatedEvents);
-        localStorage.setItem("events", JSON.stringify(updatedEvents));
     };
 
      // Función para borrar un evento
     const deleteEvent = (eventToDelete: Event) => {
         const updatedEvents = events.filter((event) => event !== eventToDelete);
         setEvents(updatedEvents);
-        localStorage.setItem("events", JSON.stringify(updatedEvents));
     };
 
     // Función para actualizar la fecha de un evento
@@ -51,7 +38,6 @@ const MainApp = () => {
             event === updatedEvent ? { ...event, eventDate: newDate } : event
         );
         setEvents(updatedEvents);
-        localStorage.setItem("events", JSON.stringify(updatedEvents));
     };
 
     return (
