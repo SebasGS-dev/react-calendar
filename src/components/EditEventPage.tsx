@@ -11,7 +11,12 @@ interface Event {
     id: number;
 }
 
-const EditEventPage = () => {
+interface EditEventPageProps {
+    events: Event[]; // Los eventos son pasados como props
+    updateEvent: (updatedEvent: Event) => void; // La función de actualización también es pasada como prop
+}
+
+const EditEventPage = ({ events, updateEvent }: EditEventPageProps) => {
     const { id } = useParams<{ id: string }>(); // Obtener el ID del evento desde la URL
     const navigate = useNavigate();
     const [event, setEvent] = useState<Event | null>(null);
@@ -24,18 +29,17 @@ const EditEventPage = () => {
         id: 0,
     });
 
-    // Cargar el evento desde localStorage al montar el componente
+    // Buscar el evento por su ID y cargarlo en el formulario
     useEffect(() => {
-        const storedEvents: Event[] = JSON.parse(localStorage.getItem("events") || "[]");
-        const eventToEdit = storedEvents.find(event => event.id === parseInt(id || "0", 10));
+        const eventToEdit = events.find(event => event.id === parseInt(id || "0", 10));
         if (eventToEdit) {
             setEvent(eventToEdit);
             setFormData(eventToEdit);
         }
-    }, [id]);
+    }, [id, events]);
 
     
-    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -45,21 +49,16 @@ const EditEventPage = () => {
 
     // Función para guardar los cambios del evento editado
     const handleSave = () => {
-        if (!event) return;
+        if (!formData) return;
 
-        const storedEvents: Event[] = JSON.parse(localStorage.getItem("events") || "[]");
-        const updatedEvents = storedEvents.map(ev => 
-            ev.id === event.id ? { ...ev, ...formData } : ev
-        );
-
-        localStorage.setItem("events", JSON.stringify(updatedEvents));
+        updateEvent(formData);
         navigate("/"); // Navegar de vuelta a la página principal después de guardar
     };
 
     return (
         <div className="p-6">
             <h2 className="text-2xl font-bold mb-4">Editar Evento</h2>
-            {event ? (
+            {formData ? (
                 <div className="flex flex-col gap-4">
                     <input
                         type="text"
