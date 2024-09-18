@@ -1,6 +1,6 @@
 import { Navigate, Route, BrowserRouter as Router, Routes } from "react-router-dom"
-import MainApp from "../components/mainApp"
 import EditEventPage from "../components/EditEventPage"
+import MainApp from "../components/MainApp"
 
 
 const Navigation = () => {
