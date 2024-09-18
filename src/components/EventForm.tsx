@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
+import { Box, TextField, TextareaAutosize, Select, MenuItem, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
 
 type EventFormInputs = {
     eventName: string;
@@ -24,73 +25,83 @@ const EventForm: React.FC<EventFormProps> = ({ addEvent }) => {
     };
 
     return (
-        <form onSubmit = { handleSubmit(onSubmit) } className="max-w-md mx-auto p-4 shadow-md">
-            <h2 className="text-xl font-bold mb-4">Agregar Evento</h2>
-    
-            {/* Nombre del Evento */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Nombre del Evento</label>
-                <input type="text"
-                    {...register("eventName", { required: "Este campo es obligatorio" })}
-                    className={`w-full px-3 py-2 border ${errors.eventName ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                />  
-                {errors.eventName && <p className="text-red-500 text-sm">{errors.eventName.message}</p>}
-            </div>
+        <form onSubmit={handleSubmit(onSubmit)}>
+            <Box sx={{ maxWidth: 'md', mx: 'auto', p: 4, boxShadow: 3 }}>
+                <h2 className="text-xl font-bold mb-4">Agregar Evento</h2>
 
-            {/* Fecha del Evento */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Fecha del Evento</label>
-                <input type="date"
-                    {...register("eventDate", { required: "Este campo es obligatorio" })}
-                    className={`w-full px-3 py-2 border ${errors.eventDate ? 'border-red-500' : 'border-gray-300'} rounded-md`}
-                />
-                {errors.eventDate && <p className="text-red-500 text-sm">{errors.eventDate.message}</p>}
-            </div>
+                {/* Nombre del Evento */}
+                <FormControl fullWidth sx={{ mb: 4 }} error={!!errors.eventName}>
+                    <TextField
+                        label="Nombre del Evento"
+                        variant="outlined"
+                        fullWidth
+                        {...register("eventName", { required: "Este campo es obligatorio" })}
+                    />
+                    {errors.eventName && <FormHelperText>{errors.eventName.message}</FormHelperText>}
+                </FormControl>
 
-            {/* Detalles del Evento */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Detalles del Evento</label>
-                <textarea
-                    {...register("eventDetails")}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    rows={4}
-                />
-            </div>
+                {/* Fecha del Evento */}
+                <FormControl fullWidth sx={{ mb: 4 }} error={!!errors.eventDate}>
+                    <TextField
+                        label="Fecha del Evento"
+                        type="date"
+                        variant="outlined"
+                        InputLabelProps={{ shrink: true }}  // Para que el label se mantenga arriba del campo
+                        fullWidth
+                        {...register("eventDate", { required: "Este campo es obligatorio" })}
+                    />
+                    {errors.eventDate && <FormHelperText>{errors.eventDate.message}</FormHelperText>}
+                </FormControl>
 
-            {/* Usuarios */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Usuario</label>
-                <select
+                {/* Detalles del Evento */}
+                <FormControl fullWidth sx={{ mb: 4 }}>
+                    <TextField
+                        label="Detalles del Evento"
+                        multiline
+                        rows={4}
+                        variant="outlined"
+                        fullWidth
+                        {...register("eventDetails")}
+                    />
+                </FormControl>
+
+                {/* Usuario */}
+                <FormControl fullWidth sx={{ mb: 4 }} error={!!errors.user}>
+                <InputLabel id="user-label">Usuario</InputLabel>
+                <Select
+                    labelId="user-label"
+                    label="Usuario"
                     {...register("user", { required: "Este campo es obligatorio" })}
-                    className={`w-full px-3 py-2 border ${errors.user ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                 >
-                    <option value="">Selecciona un usuario</option>
-                    <option value="Juan">Juan</option>
-                    <option value="Camilo">Camilo</option>
-                </select>
-                {errors.user && <p className="text-red-500 text-sm">{errors.user.message}</p>}
-            </div>
+                    <MenuItem value=""><em>Selecciona un usuario</em></MenuItem>
+                    <MenuItem value="Juan">Juan</MenuItem>
+                    <MenuItem value="Camilo">Camilo</MenuItem>
+                </Select>
+                {errors.user && <FormHelperText>{errors.user.message}</FormHelperText>}
+                </FormControl>
 
-            {/* Prioridad */}
-            <div className="mb-4">
-                <label className="block text-sm font-bold mb-2">Prioridad</label>
-                <select
+                {/* Prioridad */}
+                <FormControl fullWidth sx={{ mb: 4 }} error={!!errors.priority}>
+                <InputLabel id="priority-label">Prioridad</InputLabel>
+                <Select
+                    labelId="priority-label"
+                    label="Prioridad"
                     {...register("priority", { required: "Este campo es obligatorio" })}
-                    className={`w-full px-3 py-2 border ${errors.priority ? 'border-red-500' : 'border-gray-300'} rounded-md`}
                 >
-                    <option value="">Selecciona la prioridad</option>
-                    <option value="Muy Alta">Muy Alta</option>
-                    <option value="Alta">Alta</option>
-                    <option value="Media">Media</option>
-                    <option value="Baja">Baja</option>
-                    <option value="Muy Baja">Muy Baja</option>
-                </select>
-                {errors.priority && <p className="text-red-500 text-sm">{errors.priority.message}</p>}
-            </div>
+                    <MenuItem value=""><em>Selecciona la prioridad</em></MenuItem>
+                    <MenuItem value="Muy Alta">Muy Alta</MenuItem>
+                    <MenuItem value="Alta">Alta</MenuItem>
+                    <MenuItem value="Media">Media</MenuItem>
+                    <MenuItem value="Baja">Baja</MenuItem>
+                    <MenuItem value="Muy Baja">Muy Baja</MenuItem>
+                </Select>
+                {errors.priority && <FormHelperText>{errors.priority.message}</FormHelperText>}
+                </FormControl>
 
-            <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300">
+                <Button variant="contained" type="submit" fullWidth sx={{ py: 2 }}>
                 Guardar Evento
-            </button>
+                </Button>
+            </Box>
         </form>
     );
 };
