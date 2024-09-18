@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { Paper, Typography, Button, TextField, Box } from '@mui/material';
 
 // Colores basados en la prioridad
 const priorityColors: Record <string, string> = {
@@ -46,59 +47,77 @@ const Calendar = ({ events, deleteEvent, updateEventDate }: CalendarProps) => {
     };
 
     return (
-        <div className="max-w-screen-xl p-4">
-            <h2 className="text-xl font-bold mb-4 text-center">Calendario - Septiembre 2024</h2>
+        <Box sx={{ maxWidth: 'xl', p: 4 }}>
+            <Typography variant="h4" align="center" gutterBottom>
+                Calendario - Septiembre 2024
+            </Typography>
 
-            <div className="grid grid-cols-7 gap-2">
-                {/* Cabecera del calendario */}
-                <div className="font-bold">Lun</div>
-                <div className="font-bold">Mar</div>
-                <div className="font-bold">Mié</div>
-                <div className="font-bold">Jue</div>
-                <div className="font-bold">Vie</div>
-                <div className="font-bold">Sáb</div>
-                <div className="font-bold">Dom</div>
+            {/* Cabecera del calendario */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2, mb: 2 }}>
+                {['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'].map((day, index) => (
+                <Typography key={index} variant="subtitle1" fontWeight="bold" align="center">
+                    {day}
+                </Typography>
+                ))}
+            </Box>
 
+            {/* Días del mes (iniciando con los espacios en blanco) */}
+            <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 2 }}>
                 {/* Días en blanco para que el 1 de septiembre inicie en el día correcto */}
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div></div>
+                {[...Array(6)].map((_, index) => (
+                    <Box key={index} />
+                ))}
 
                 {/* Días del mes */}
                 {daysOfSeptember.map((date, index) => (
-                    <div key={index} className="border border-gray-300 p-2 rounded-md relative">
-                        <div className="text-center font-bold">{date.getDate()}</div>
+                    <Paper key={index} variant="outlined" sx={{ p: 2, borderRadius: 2, position: 'relative' }}>
+                        <Typography variant="h6" align="center" fontWeight="bold">
+                            {date.getDate()}
+                        </Typography>
 
                         {/* Renderizar los eventos correspondientes a este día */}
                         {getEventsForDay(date).map((event, eventIndex) => (
-                            <div key={eventIndex} className={`mt-2 p-2 text-white rounded-md ${priorityColors[event.priority]}`}>
-                                <p className="font-bold">{event.eventName}</p>
-                                <p className="text-sm">{event.user}</p>
+                            <Box key={eventIndex} sx={{ mt: 2, p: 1, borderRadius: 2, backgroundColor: priorityColors[event.priority], color: 'black' }}>
+                                <Typography variant="subtitle2" fontWeight="bold">
+                                    {event.eventName}
+                                </Typography>
+                                <Typography variant="body2">{event.user}</Typography>
 
                                 {/* Campo para editar la fecha del evento */}
-                                <input
-                                    type="date"
-                                    value={event.eventDate}
-                                    onChange={(e) => updateEventDate(event, e.target.value)}
-                                    className="mt-2 w-full bg-gray-200 p-2 rounded-md"
-                                />
+                                    <TextField
+                                        type="date"
+                                        value={event.eventDate}
+                                        onChange={(e) => updateEventDate(event, e.target.value)}
+                                        fullWidth
+                                        sx={{ mt: 2, bgcolor: 'grey.200', borderRadius: 2 }}
+                                    />
 
                                 {/* Botones de editar y borrar */}
-                                <div className="mt-2 flex justify-between">
-                                <Link to={`/edit/${event.id}`} className="bg-yellow-400 text-black px-2 py-1 rounded">
-                                    Editar
-                                </Link>
-                                    <button className="bg-red-600 px-2 py-1 rounded" onClick={() => deleteEvent(event)}>Borrar</button>
-                                </div>
-                            </div>
+                                <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+                                    <Button
+                                        component={Link}
+                                        to={`/edit/${event.id}`}
+                                        size="small"
+                                        variant="contained"
+                                        sx={{ bgcolor: 'yellow', color: 'black' }}
+                                    >
+                                        Editar
+                                    </Button>
+                                    <Button
+                                        size="small"
+                                        variant="contained"
+                                        color="error"
+                                        onClick={() => deleteEvent(event)}
+                                    >
+                                        Borrar
+                                    </Button>
+                                </Box>
+                            </Box>
                         ))}
-                    </div>
+                    </Paper>
                 ))}
-            </div>
-        </div>
+            </Box>
+        </Box>
     );
 };
 
