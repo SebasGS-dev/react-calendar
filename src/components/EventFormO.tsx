@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { Box, TextField, TextareaAutosize, Select, MenuItem, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { Box, TextField, Select, MenuItem, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
 
 type EventFormInputs = {
     eventName: string;
