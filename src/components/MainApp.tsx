@@ -1,6 +1,6 @@
 import  { useState, useEffect } from "react";
-import EventForm from "./EventForm";
 import Calendar from "./Calendar";
+import EventForm from "./organisms/EventForm";
 
 // Definir el tipo de evento
 interface Event {
