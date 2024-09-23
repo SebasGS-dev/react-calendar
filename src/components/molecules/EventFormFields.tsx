@@ -1,9 +1,36 @@
 import TextInput from '../atoms/TextInput';
 import SelectInput from '../atoms/SelectInput';
 import { useFormContext } from 'react-hook-form';
+import { getAllCharactersApi } from '../../services/getAllCharactersApi';
+import { useEffect, useState } from 'react';
 
 const EventFormFields = () => {
     const { register, formState: { errors } } = useFormContext();
+
+    const [characters, setCharacters] = useState<any[]>([]);
+
+    // Llamada a la API para obtener los personajes
+    const fetchCharacters = async () => {
+        const response = await getAllCharactersApi();
+        setCharacters(response?.data.results || []);
+    };
+
+    // Ejecutar la llamada a la API cuando el componente se monta
+    useEffect(() => {
+        fetchCharacters();
+    }, []);
+
+    // Transformar los personajes en opciones para el SelectInput
+    const characterOptions = characters.map((character) => ({
+        value: character.name,
+        label: character.name
+    }));
+
+    // Agregar la opción predeterminada al principio de las opciones
+    const options = [
+        { value: "", label: "Selecciona un usuario" },
+        ...characterOptions
+    ];
 
     return (
         <>
@@ -36,11 +63,7 @@ const EventFormFields = () => {
             {/* Usuario */}
             <SelectInput
                 label="Usuario"
-                options={[
-                    { value: "", label: "Selecciona un usuario" },
-                    { value: "Juan", label: "Juan" },
-                    { value: "Camilo", label: "Camilo" }
-                ]}
+                options={options}
                 register={register("user", { required: "Este campo es obligatorio" })}
                 error={!!errors.user}
                 helperText={errors.eventName?.message?.toString() || ''}

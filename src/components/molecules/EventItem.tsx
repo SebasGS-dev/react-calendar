@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box } from '@mui/material';
 import TypographyAtom from '../atoms/TypographyAtom';
 import ButtonAtom from '../atoms/ButtonAtom';
