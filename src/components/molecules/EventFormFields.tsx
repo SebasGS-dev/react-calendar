@@ -3,34 +3,33 @@ import SelectInput from '../atoms/SelectInput';
 import { useFormContext } from 'react-hook-form';
 import { getAllCharactersApi } from '../../services/getAllCharactersApi';
 import { useEffect, useState } from 'react';
+import { characterDOM, optionsSelect } from '../../models/RicAndMortyDOM';
+import { characterAdapter } from '../../adapters/RicAndMorAdap';
 
 const EventFormFields = () => {
     const { register, formState: { errors } } = useFormContext();
+    const [options, setOptions] = useState<optionsSelect[]>([]);
 
-    const [characters, setCharacters] = useState<any[]>([]);
+    const convertToSelectOption = (character:characterDOM[]) =>{
+        const optionsCharacters = character.map( (character) => ({
+            value: character.id.toString(),
+            label: character.name,
+        }));
 
-    // Llamada a la API para obtener los personajes
+        return optionsCharacters;
+    }
+
     const fetchCharacters = async () => {
-        const response = await getAllCharactersApi();
-        setCharacters(response?.data.results || []);
+        const response = await getAllCharactersApi(); 
+        const adaptedResponse = characterAdapter(response?.results || []);
+        const optionsCharacters = convertToSelectOption(adaptedResponse);
+
+        setOptions(optionsCharacters);
     };
 
-    // Ejecutar la llamada a la API cuando el componente se monta
     useEffect(() => {
         fetchCharacters();
     }, []);
-
-    // Transformar los personajes en opciones para el SelectInput
-    const characterOptions = characters.map((character) => ({
-        value: character.name,
-        label: character.name
-    }));
-
-    // Agregar la opción predeterminada al principio de las opciones
-    const options = [
-        { value: "", label: "Selecciona un usuario" },
-        ...characterOptions
-    ];
 
     return (
         <>
