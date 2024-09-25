@@ -1,9 +1,35 @@
 import TextInput from '../atoms/TextInput';
 import SelectInput from '../atoms/SelectInput';
 import { useFormContext } from 'react-hook-form';
+import { getAllCharactersApi } from '../../services/getAllCharactersApi';
+import { useEffect, useState } from 'react';
+import { characterDOM, optionsSelect } from '../../models/RicAndMortyDOM';
+import { characterAdapter } from '../../adapters/RicAndMorAdap';
 
 const EventFormFields = () => {
     const { register, formState: { errors } } = useFormContext();
+    const [options, setOptions] = useState<optionsSelect[]>([]);
+
+    const convertToSelectOption = (character:characterDOM[]) =>{
+        const optionsCharacters = character.map( (character) => ({
+            value: character.id.toString(),
+            label: character.name,
+        }));
+
+        return optionsCharacters;
+    }
+
+    const fetchCharacters = async () => {
+        const response = await getAllCharactersApi(); 
+        const adaptedResponse = characterAdapter(response?.results || []);
+        const optionsCharacters = convertToSelectOption(adaptedResponse);
+
+        setOptions(optionsCharacters);
+    };
+
+    useEffect(() => {
+        fetchCharacters();
+    }, []);
 
     return (
         <>
@@ -36,11 +62,7 @@ const EventFormFields = () => {
             {/* Usuario */}
             <SelectInput
                 label="Usuario"
-                options={[
-                    { value: "", label: "Selecciona un usuario" },
-                    { value: "Juan", label: "Juan" },
-                    { value: "Camilo", label: "Camilo" }
-                ]}
+                options={options}
                 register={register("user", { required: "Este campo es obligatorio" })}
                 error={!!errors.user}
                 helperText={errors.eventName?.message?.toString() || ''}
